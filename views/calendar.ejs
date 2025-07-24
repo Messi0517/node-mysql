@@ -1,0 +1,15 @@
+<h1><%= title %></h1>
+<table>
+  <tr>
+    <th>タスク</th>
+    <th>期限</th>
+    <th>作成日時</th>
+  </tr>
+  <% tasks.forEach(function(task) { %>
+    <tr>
+      <td><%= task.content %></td>
+      <td><%= task.due_date %></td>
+      <td><%= task.created_at %></td>
+    </tr>
+  <% }) %>
+</table>

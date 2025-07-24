@@ -12,10 +12,10 @@ module.exports = function (app) {
   done(null, user.id);
 });
 
-  passport.deserializeUser(function (id, done) {
+  passport.deserializeUser(async function (id, done) {
   console.log("deserializeUser");
   try {
-    const user = User.findById(id);
+    const user = await User.findById(id);
     done(null, user);
   } catch (error) {
     done(error, null);
@@ -57,6 +57,5 @@ module.exports = function (app) {
     })
   );
 
-  app.use(passport.initialize());
   app.use(passport.session());
 };
