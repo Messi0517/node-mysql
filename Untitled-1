@@ -1,0 +1,8 @@
+/* カレンダーを大きくするスタイル例 */
+// filepath: src/App.css
+.calendar-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-size: 2rem; /* 文字も大きく */
+}
