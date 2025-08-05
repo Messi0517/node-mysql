@@ -6,36 +6,62 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
         integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 </head>
-<!DOCTYPE html>
-<html>
-<head>
-  <title><%= title %></title>
-  <link rel='stylesheet' href='/stylesheets/style.css'/>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-</head>
 <body>
 <%- include('./error_messages'); %>
 <% if(isAuth) { %>
   <div class="container">
-  <div class="row">
-    <div class="col-md-6">
-      <form action="/" method="post">
-        <label>タスクの追加</label>
-        <input required type="text" name="add" placeholder="何をする?"/>
-         <input required type="date" name="due_date" placeholder="期限日"/>
-        <input type="submit" value="追加"/>
-      </form>
-    </div>
-    <div class="col-md-6">
-      <ul>
-        <% for(let todo of todos){ %>
-          <li><span><%= todo.content %></span></li>
-        <% } %>
-      </ul>
+    <div class="row">
+      <div class="col-12 mb-4">
+        <div id="calendar"></div>
+      </div>
+      <div class="col-md-6">
+        <form action="/" method="post">
+          <label>タスクの追加</label>
+          <input required type="text" name="add" placeholder="何をする?"/>
+          <input required type="date" name="due_date" placeholder="期限日"/>
+          <input type="submit" value="追加"/>
+        </form>
+      </div>
+      <div class="col-md-6">
+        <ul>
+          <% for(let todo of todos){ %>
+            <li><span><%= todo.content %></span></li>
+          <% } %>
+        </ul>
+      </div>
     </div>
   </div>
-</div>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+  <style>
+    #calendar {
+      max-width: 900px;
+      margin: 30px auto;
+      font-size: 1.5rem;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // EJSからtodos配列を受け取る
+      const todos = <%- JSON.stringify(todos) %>;
+      // FullCalendar用イベント配列生成
+      const events = todos
+        .filter(todo => todo.due_date)
+        .map(todo => ({
+          title: todo.content,
+          start: todo.due_date
+        }));
+
+      const calendarEl = document.getElementById('calendar');
+      const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        height: 600,
+        events: events,
+        locale: 'ja'
+      });
+      calendar.render();
+    });
+  </script>
 <% } else { %>
   <h1>Welcome to the TodoApp</h1>
   <a class="btn btn-primary" href="/signup" role="button">Sign up now!</a>
